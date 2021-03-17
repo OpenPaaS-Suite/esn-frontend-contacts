@@ -1,4 +1,4 @@
-.row(ng-if="!$ctrl.addressbook.group")
+.row(ng-if="!$ctrl.addressbook.group", feature-flag="linagora.esn.contact.features.isSharingAddressbookEnabled")
   .col-md-4.col-xs-5.title-header
     i.mdi.mdi-account-multiple
     h4 {{ 'Public right' | translate }}

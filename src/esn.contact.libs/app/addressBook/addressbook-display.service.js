@@ -12,7 +12,7 @@ require('./addressbook.constants.js');
     .factory('contactAddressbookDisplayService', contactAddressbookDisplayService);
 
   function contactAddressbookDisplayService(
-    esnConfig,
+    $q,
     contactAddressbookDisplayShellRegistry,
     ContactAddressbookDisplayShell,
     contactGroupAddressbookService,
@@ -26,16 +26,10 @@ require('./addressbook.constants.js');
       buildDisplayName: buildDisplayName
     };
 
-    function convertShellsToDisplayShells(addressbookShells, options) {
-      options = options || {};
+    function convertShellsToDisplayShells(addressbookShells, options = {}) {
+      const shells = addressbookShells.map(addressbookShell => convertShellToDisplayShell(addressbookShell, options));
 
-      return esnConfig('linagora.esn.contact.features.isSharingAddressbookEnabled', true).then(function(isSharingAddressbookEnabled) {
-        options.isSharingAddressbookEnabled = isSharingAddressbookEnabled;
-
-        return addressbookShells.map(function(addressbookShell) {
-          return convertShellToDisplayShell(addressbookShell, options);
-        });
-      });
+      return $q.when(shells);
     }
 
     function convertShellToDisplayShell(addressbookShell, options) {
@@ -46,11 +40,7 @@ require('./addressbook.constants.js');
         var addressbookDisplayShell = new match.displayShell(addressbookShell);
 
         if (options.includeActions) {
-          var actions = _.filter(match.actions, function(action) {
-            return action.name === 'Settings' ? options.isSharingAddressbookEnabled : true;
-          });
-
-          addressbookDisplayShell.actions = actions || [];
+          addressbookDisplayShell.actions = match.actions || [];
         }
 
         if (options.includePriority) {

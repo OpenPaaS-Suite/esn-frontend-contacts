@@ -18,7 +18,11 @@ form(name="form")
         li.btn-wave(ng-class="{'active': $ctrl.selectedTab === 'main'}")
           a(href='', ng-click="$ctrl.selectedTab = 'main'")
             | {{ 'Main' | translate }}
-        li.btn-wave(ng-class="{'active': $ctrl.selectedTab === 'delegation'}", ng-if="$ctrl.addressbook.canShareAddressbook")
+        li.btn-wave(
+          ng-class="{'active': $ctrl.selectedTab === 'delegation'}",
+          ng-if="$ctrl.addressbook.canShareAddressbook",
+          feature-flag="linagora.esn.contact.features.isSharingAddressbookEnabled"
+        )
           a(href='', ng-click="$ctrl.selectedTab = 'delegation'")
             | {{ 'Delegation' | translate }}
       .card-body.settings-page-body
